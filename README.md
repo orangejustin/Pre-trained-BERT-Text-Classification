@@ -1,4 +1,4 @@
-# CODE is STILL HIDDEN (WILL BE RELEASED SOON)
+# MOST OF THE CODE is STILL HIDDEN (WILL BE RELEASED SOON)
 # PA 4: Pre-trained BERT Text Classification Application with Amazon-Massive-Intent Dataset
 
 This respository is refered and modified from this repository of the [paper](https://arxiv.org/abs/2109.03079).
