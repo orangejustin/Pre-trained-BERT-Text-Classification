@@ -11,8 +11,10 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 device='cuda'
 
 def get_dataloader(args, dataset, split='train'):
-    sampler = RandomSampler(dataset) if split == 'train' else SequentialSampler(dataset)
     collate = dataset.collate_func
+
+    sampler = RandomSampler(dataset) if split == 'train' else SequentialSampler(dataset)
+    
     
     b_size = args.batch_size
     dataloader = DataLoader(dataset, sampler=sampler, batch_size=b_size, collate_fn=collate)
@@ -56,9 +58,9 @@ def prepare_features(args, data, tokenizer, cache_path):
         feats = []
         # task1: process examples using tokenizer. Wrap it using BaseInstance class and append it to feats list.
         for example in progress_bar(examples, total=len(examples)):
+            print(type(example), example["text"])
             # tokenizer: set 'max_length' to padding, set True to truncation, set args.max_len to max_length 
-            embed_data = tokenizer(padding = "max_length", truncation = True, max_length = args.max_len)
-            
+            embed_data = tokenizer(example["text"], padding = "max_length", truncation = True, max_length = args.max_len)
             instance = BaseInstance(embed_data, example)
             feats.append(instance)
         print(embed_data, example)
@@ -69,14 +71,14 @@ def prepare_features(args, data, tokenizer, cache_path):
     return all_features
 
 def process_data(args, features, tokenizer):
-  train_size, dev_size = len(features['train']), len(features['validation'])
+    train_size, dev_size = len(features['train']), len(features['validation'])
 
-  datasets = {}
-  for split, feat in features.items():
-      ins_data = feat
-      datasets[split] = IntentDataset(ins_data, tokenizer, split)
+    datasets = {}
+    for split, feat in features.items():
+        ins_data = feat
+        datasets[split] = IntentDataset(ins_data, tokenizer, split)
 
-  return datasets
+    return datasets
 
 class BaseInstance(object):
     def __init__(self, embed_data, example):

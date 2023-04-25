@@ -10,13 +10,16 @@ def params():
                       tune is advanced techiques to fine-tune bert;\n\
                       constast is contrastive learning method")
                       #choices=['baseline','tune','supcon'])
-    parser.add_argument("--temperature", default=0.7, type=int, 
+    parser.add_argument("--temperature", default=0.4, type=float, 
                 help="temperature parameter for contrastive loss")
 
     # optional fine-tuning techiques parameters
-    parser.add_argument("--reinit_n_layers", default=0, type=int, 
+    parser.add_argument("--reinit-n-layers", default=0, type=int,
                 help="number of layers that are reinitialized. Count from last to first.")
-    
+    parser.add_argument("--scheduler", default="none", type=str,
+                        help="type of learning rate scheduler to be applied", choices=["linear", "cosine", "none"])
+    parser.add_argument("--warm-up-step", default=0, type=int,
+                        help="number of warm up layers")
     # Others
     parser.add_argument("--input-dir", default='assets', type=str, 
                 help="The input training data file (a text file).")
@@ -40,21 +43,21 @@ def params():
                 help="Whether to run eval on the dev set.")
     
     # Hyper-parameters for tuning
-    parser.add_argument("--batch-size", default=1, type=int,
+    parser.add_argument("--batch-size", default=64, type=int,
                 help="Batch size per GPU/CPU for training and evaluation.")
-    parser.add_argument("--learning-rate", default=3, type=float,
+    parser.add_argument("--learning-rate", default=0.01, type=float,
                 help="Model learning rate starting point.")
-    parser.add_argument("--hidden-dim", default=10, type=int,
+    parser.add_argument("--hidden-dim", default=1024, type=int,
                 help="Model hidden dimension.")
-    parser.add_argument("--drop-rate", default=0.9, type=float,
+    parser.add_argument("--drop-rate", default=0.05, type=float,
                 help="Dropout rate for model training")
-    parser.add_argument("--embed-dim", default=10, type=int,
+    parser.add_argument("--embed-dim", default=768, type=int,
                 help="The embedding dimension of pretrained LM.")
     parser.add_argument("--adam-epsilon", default=1e-8, type=float,
                 help="Epsilon for Adam optimizer.")
-    parser.add_argument("--n-epochs", default=1, type=int,
+    parser.add_argument("--n-epochs", default=10, type=int,
                 help="Total number of training epochs to perform.")
-    parser.add_argument("--max-len", default=20, type=int,
+    parser.add_argument("--max-len", default=64, type=int,
                 help="maximum sequence length to look back")
 
     args = parser.parse_args()
